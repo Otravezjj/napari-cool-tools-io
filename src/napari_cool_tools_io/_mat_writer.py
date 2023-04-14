@@ -104,7 +104,7 @@ def data_mat_file_writer(path: str, layers: list[Layer]) -> List[str]:
         path = Path(path)
         p_dir = Path(path.parent) / path.stem
         ext = path.suffix
-        os.makedirs(dir, exist_ok=True)
+        os.makedirs(p_dir, exist_ok=True)
 
         for layer in layers:
             # layers consist of LayerDataTuples (data,kwargs,layer_type)
@@ -169,7 +169,7 @@ def compressed_data_mat_file_writer(
         path = Path(path)
         p_dir = Path(path.parent) / path.stem
         ext = path.suffix
-        os.makedirs(dir, exist_ok=True)
+        os.makedirs(p_dir, exist_ok=True)
 
         for layer in layers:
             # layers consist of LayerDataTuples (data,kwargs,layer_type)
