@@ -29,6 +29,9 @@ contributions:
     - id: napari-cool-tools-io.write_compressed_data_mat
       title: Save compressed Scene .mat
       python_name: napari_cool_tools_io._mat_writer:compressed_data_mat_file_writer
+    - id: napari-cool-tools-io.write_data_prof
+      title: Save Data .prof
+      python_name: napari_cool_tools_io._prof_writer:prof_file_writer
     - id: napari-cool-tools-io.make_sample_data
       python_name: napari_cool_tools_io._sample_data:make_sample_data
       title: Load sample data from COOL lab IO tools
@@ -108,6 +111,13 @@ contributions:
       filename_extensions:
       - .mat
       display_name: Napari Data - compressed # shown in file save dialog
+    - command: napari-cool-tools-io.write_data_prof
+      layer_types:
+      - image*
+      - labels*
+      filename_extensions:
+      - .prof
+      display_name: Napari Data # shown in file save dialog
   sample_data:
     - command: napari-cool-tools-io.make_sample_data
       display_name: COOL lab IO tools
