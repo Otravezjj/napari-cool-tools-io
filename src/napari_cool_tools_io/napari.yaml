@@ -5,6 +5,9 @@ contributions:
     - id: napari-cool-tools-io.get_reader
       python_name: napari_cool_tools_io._reader:napari_get_reader
       title: Open data with COOL lab IO tools
+    - id: napari-cool-tools-io.prof_get_reader
+      python_name: napari_cool_tools_io._prof_reader:prof_get_reader
+      title: Open .prof
     - id: napari-cool-tools-io.write_multiple
       python_name: napari_cool_tools_io._writer:write_multiple
       title: Save multi-layer data with COOL lab IO tools
@@ -27,6 +30,10 @@ contributions:
     - command: napari-cool-tools-io.get_reader
       accepts_directories: false
       filename_patterns: ['*.npy']
+    - command: napari-cool-tools-io.prof_get_reader
+      accepts_directories: false
+      filename_patterns:
+      - '*.prof'
   writers:
     - command: napari-cool-tools-io.write_multiple
       layer_types: ['image*','labels*']
