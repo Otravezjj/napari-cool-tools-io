@@ -9,8 +9,7 @@ def is_mat_file(path):
     """Verify that the file the user is attempting to open is a .MAT file.
 
     Args:
-        path : str or list of str
-        Path to file, or list of paths.
+        path(str or list of str): Path to file, or list of paths.
 
     Returns:
         (is_mat_file(Bool), out(Dict)): If the load is successful True, and an output dictionary containing .MAT file contents is retrurned
@@ -37,11 +36,10 @@ def is_mat_file(path):
 
 
 def mat_get_reader(path):
-    """Reader for Matlab .mat file format.
+    """Reader for Matlab .MAT file format.
 
     Args:
-        path : str or list of str
-        Path to file, or list of paths.
+        path(str or list of str): Path to file, or list of paths.
 
     Returns:
         function or None
@@ -174,8 +172,7 @@ def mat_file_reader(path):  # -> List[T]:
     """Open .MAT matlab files using scipy with special processing flags for dealing with specific COOL lab file structures
 
     Args:
-        path : str or list of str
-        Path to file, or list of paths.
+        path(str or list of str): Path to file, or list of paths.
 
     Returns:
         display_out(List[LayerDataTuple])/None: if .MAT file is properly formated returns list of napari LayerDataTuples otherwise returns None

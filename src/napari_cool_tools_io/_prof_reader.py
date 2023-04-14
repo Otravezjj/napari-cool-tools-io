@@ -12,8 +12,7 @@ def prof_get_reader(path):
     """Reader for COOL lab .prof file format.
 
     Args:
-        path : str or list of str
-        Path to file, or list of paths.
+        path(str or list of str): Path to file, or list of paths.
 
     Returns:
         function or None
@@ -57,8 +56,7 @@ def prof_proc_meta(path):
     """Process .prof file xml metadata.
 
     Args:
-        path : str or list of str
-        Path to file, or list of paths.
+        path(str or list of str): Path to file, or list of paths.
 
     Returns:
         If xml metafile is valid returns tuple(height(int),width(int),depth(int)) else returns None
@@ -110,20 +108,17 @@ def prof_proc_meta(path):
 def prof_file_reader(path):
     """Take a path or list of paths to .prof files and return a list of LayerData tuples.
 
-    Parameters
-    ----------
-    path : str or list of str
-        Path to file, or list of paths.
+    Args:
+        path(str or list of str): Path to file, or list of paths.
 
-    Returns
-    -------
-    layer_data : list of tuples
-        A list of LayerData tuples where each tuple in the list contains
-        (data, metadata, layer_type), where data is a numpy array, metadata is
-        a dict of keyword arguments for the corresponding viewer.add_* method
-        in napari, and layer_type is a lower-case string naming the type of
-        layer. Both "meta", and "layer_type" are optional. napari will
-        default to layer_type=="image" if not provided
+    Returns:
+        layer_data : list of tuples
+            A list of LayerData tuples where each tuple in the list contains
+            (data, metadata, layer_type), where data is a numpy array, metadata is
+            a dict of keyword arguments for the corresponding viewer.add_* method
+            in napari, and layer_type is a lower-case string naming the type of
+            layer. Both "meta", and "layer_type" are optional. napari will
+            default to layer_type=="image" if not provided
     """
 
     h = globals()["prof_height"]

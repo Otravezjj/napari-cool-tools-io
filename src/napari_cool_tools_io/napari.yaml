@@ -17,6 +17,18 @@ contributions:
     - id: napari-cool-tools-io.write_single_image
       python_name: napari_cool_tools_io._writer:write_single_image
       title: Save image data with COOL lab IO tools
+    - id: napari-cool-tools-io.write_scene_mat
+      title: Save Scene .mat
+      python_name: napari_cool_tools_io._mat_writer:mat_file_writer
+    - id: napari-cool-tools-io.write_compressed_scene_mat
+      title: Save compressed Scene .mat
+      python_name: napari_cool_tools_io._mat_writer:compressed_mat_file_writer
+    - id: napari-cool-tools-io.write_data_mat
+      title: Save Scene .mat
+      python_name: napari_cool_tools_io._mat_writer:data_mat_file_writer
+    - id: napari-cool-tools-io.write_compressed_data_mat
+      title: Save compressed Scene .mat
+      python_name: napari_cool_tools_io._mat_writer:compressed_data_mat_file_writer
     - id: napari-cool-tools-io.make_sample_data
       python_name: napari_cool_tools_io._sample_data:make_sample_data
       title: Load sample data from COOL lab IO tools
@@ -48,6 +60,54 @@ contributions:
     - command: napari-cool-tools-io.write_single_image
       layer_types: ['image']
       filename_extensions: ['.npy']
+    - command: napari-cool-tools-io.write_scene_mat
+      layer_types:
+      - image*
+      - labels*
+      - points*
+      - shapes*
+      - surface*
+      - tracks*
+      - vectors*
+      filename_extensions:
+      - .mat
+      display_name: Napari Scene # shown in file save dialog
+    - command: napari-cool-tools-io.write_compressed_scene_mat
+      layer_types:
+      - image*
+      - labels*
+      - points*
+      - shapes*
+      - surface*
+      - tracks*
+      - vectors*
+      filename_extensions:
+      - .mat
+      display_name: Napari Scene - compressed # shown in file save dialog
+    - command: napari-cool-tools-io.write_data_mat
+      layer_types:
+      - image*
+      - labels*
+      - points*
+      - shapes*
+      - surface*
+      - tracks*
+      - vectors*
+      filename_extensions:
+      - .mat
+      display_name: Napari Data # shown in file save dialog
+    - command: napari-cool-tools-io.write_compressed_data_mat
+      layer_types:
+      - image*
+      - labels*
+      - points*
+      - shapes*
+      - surface*
+      - tracks*
+      - vectors*
+      filename_extensions:
+      - .mat
+      display_name: Napari Data - compressed # shown in file save dialog
   sample_data:
     - command: napari-cool-tools-io.make_sample_data
       display_name: COOL lab IO tools
