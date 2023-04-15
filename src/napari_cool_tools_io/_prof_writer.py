@@ -43,10 +43,11 @@ def prof_file_writer(path: str, layer_data: list[FullLayerData]) -> List[str]:
         # case .prof files should be 3 dimensional
         if data.ndim == 3:
             dims = data.shape
+            dtype = data.dtype
             valid_meta, meta_path = prof_proc_meta(path)
 
             if valid_meta is False:
-                create_prof_meta(meta_path, dims)
+                create_prof_meta(meta_path, dims, dtype, layer_type)
 
             # reverse flip and transpose that occured upon loading
             save_data = flip(data, 1).transpose(0, 2, 1)
@@ -73,10 +74,11 @@ def prof_file_writer(path: str, layer_data: list[FullLayerData]) -> List[str]:
             # case .prof files should be 3 dimensional
             if data.ndim == 3:
                 dims = data.shape
+                dtype = data.dtype
                 valid_meta, meta_path = prof_proc_meta(out_path)
 
                 if valid_meta is False:
-                    create_prof_meta(meta_path, dims)
+                    create_prof_meta(meta_path, dims, dtype, layer_type)
 
                 # reverse flip and transpose that occured upon loading
                 save_data = flip(data, 1).transpose(0, 2, 1)
@@ -93,7 +95,7 @@ def prof_file_writer(path: str, layer_data: list[FullLayerData]) -> List[str]:
     return [path]
 
 
-def create_prof_meta(meta_path, dims):
+def create_prof_meta(meta_path, dims, dtype, layer_type):
     """
     Args:
         meta_path(str or list of str): Path to file, or list of paths containing metadata.
@@ -108,6 +110,9 @@ def create_prof_meta(meta_path, dims):
     vol_size.set("Height", str(height))
     vol_size.set("BscanWidth", str(bscan_width))
     vol_size.set("Number_of_Frames", str(num_frames))
+    layer_info = ET.SubElement(meta, "Layer_Info")
+    layer_info.set("Layer_Type", layer_type)
+    layer_info.set("Dtype", str(dtype))
 
     out_tree = ET.ElementTree(root)
     out_tree.write(meta_path)
