@@ -1,6 +1,7 @@
 import os
 import os.path as ospath
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import numpy as np
 from napari.utils.notifications import show_info
@@ -84,7 +85,8 @@ def prof_proc_meta(path):
     show_info(f"Associated meta data file: {meta_path}")
 
     # verify whether meta file exists or not
-    if isinstance(meta_path, str):
+    # if isinstance(meta_path, str):
+    if Path(meta_path).is_file():
         show_info("Meta Data exists:")
 
         tree = ET.parse(meta_path)
