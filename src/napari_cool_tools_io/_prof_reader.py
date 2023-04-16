@@ -39,11 +39,13 @@ def prof_get_reader(path):
             )
             # calculate width of data volume using height and depth info
             # from meta data file and calculated number of data entries
-            h, w, d = meta
+            h, w, d, dtype, layer_type = meta
 
             globals()["prof_width"] = w
             globals()["prof_height"] = h
             globals()["prof_depth"] = d
+            globals()["dtype"] = dtype
+            globals()["layer_type"] = layer_type
 
         # case meta data is not valid
         else:
@@ -91,14 +93,25 @@ def prof_proc_meta(path):
 
         tree = ET.parse(meta_path)
         root = tree.getroot()
-        volume_size = root.find(".//Volume_Size").attrib
-        height = int(volume_size["Height"])
-        width = int(volume_size["BscanWidth"])
-        depth = int(volume_size["Number_of_Frames"])
+        volume_size = root.find(".//Volume_Size")
+        volume_size_attrib = volume_size.attrib
+        height = int(volume_size_attrib["Height"])
+        width = int(volume_size_attrib["BscanWidth"])
+        depth = int(volume_size_attrib["Number_of_Frames"])
+
+        layer_info = root.find(".//Layer_Info")
+
+        if layer_info is not None:
+            layer_info_attrib = layer_info.attrib
+            dtype = layer_info_attrib["Dtype"]
+            layer_type = layer_info_attrib["Layer_Type"]
+        else:
+            dtype = None
+            layer_type = None
 
         # Case no valid values obtained from metafile return None
         if depth is not None and height is not None and width is not None:
-            return (height, width, depth)
+            return (height, width, depth, dtype, layer_type)
         else:
             return None
 
@@ -125,6 +138,8 @@ def prof_file_reader(path):
 
     h = globals()["prof_height"]
     w = globals()["prof_width"]
+    dtype = globals()["dtype"]
+    layer_type = globals()["layer_type"]
 
     # isolate file name from path and .prof extension
     # file_name = ospath.basename(path)
@@ -133,7 +148,10 @@ def prof_file_reader(path):
 
     # define chuncks as little endian f32 4 byte floats with HEIGHT values
     # per row and WIDTH values per column
-    dot_prof = np.dtype(("<f4", (h, w)))
+    if dtype is None:
+        dot_prof = np.dtype(("<f4", (h, w)))
+    else:
+        dot_prof = np.dtype((dtype, (h, w)))
 
     # generate numpy array by loading 400 * 496 * f32 sized data chunks
     # and stacking them until end of file is reached
@@ -150,7 +168,10 @@ def prof_file_reader(path):
     add_kwargs = {"name": file_name}
 
     # optional layer type argument
-    layer_type = "image"
+    if layer_type is None:
+        layer_type = "image"
+    else:
+        pass
 
     show_info(
         f"layer_name: {file_name}, shape: {display.shape}, dtype: {display.dtype}, layer type: {layer_type}\n"
