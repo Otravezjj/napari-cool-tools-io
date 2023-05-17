@@ -1,5 +1,5 @@
 @echo off
 call conda --version
-call conda activate cool_tools_dev_env
+call conda activate napari-pytorch-dev-env
 call napari --version
 call napari
