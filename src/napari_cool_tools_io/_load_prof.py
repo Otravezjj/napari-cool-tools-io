@@ -1,5 +1,5 @@
 """
-This module is contains code for loading .prof files wihout .xml metadata
+This module contains code for loading .prof files wihout .xml metadata
 """
 from pathlib import Path
 
