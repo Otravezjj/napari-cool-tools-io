@@ -9,6 +9,12 @@ __all__ = ("make_sample_data",)
 
 import napari
 import torch
+from napari.utils.notifications import show_info
 
 viewer = napari.current_viewer()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def memory_stats():
+    show_info(f"Gpu memory allocated: {torch.cuda.memory_allocated()/1024**2}")
+    show_info(f"Gpu memory reserved: {torch.cuda.memory_reserved()/1024**2}")
