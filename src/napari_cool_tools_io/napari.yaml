@@ -35,22 +35,10 @@ contributions:
     - id: napari-cool-tools-io.make_sample_data
       python_name: napari_cool_tools_io._sample_data:make_sample_data
       title: Load sample data from COOL lab IO tools
-    - id: napari-cool-tools-io.make_qwidget
-      python_name: napari_cool_tools_io._widget:ExampleQWidget
-      title: Make example QWidget
-    - id: napari-cool-tools-io.make_magic_widget
-      python_name: napari_cool_tools_io._widget:example_magic_widget
-      title: Make example magic widget
-    - id: napari-cool-tools-io.make_func_widget
-      python_name: napari_cool_tools_io._widget:example_function_widget
-      title: Make example function widget
     - id: napari-cool-tools-io.load_prof
       title: Load ".prof" files without metadata
       python_name: napari_cool_tools_io._load_prof:load_prof
   readers:
-    - command: napari-cool-tools-io.get_reader
-      accepts_directories: false
-      filename_patterns: ['*.npy']
     - command: napari-cool-tools-io.prof_get_reader
       accepts_directories: false
       filename_patterns:
@@ -60,12 +48,6 @@ contributions:
       filename_patterns:
       - '*.mat'
   writers:
-    - command: napari-cool-tools-io.write_multiple
-      layer_types: ['image*','labels*']
-      filename_extensions: []
-    - command: napari-cool-tools-io.write_single_image
-      layer_types: ['image']
-      filename_extensions: ['.npy']
     - command: napari-cool-tools-io.write_scene_mat
       layer_types:
       - image*
@@ -121,18 +103,7 @@ contributions:
       filename_extensions:
       - .prof
       display_name: Napari Data # shown in file save dialog
-  sample_data:
-    - command: napari-cool-tools-io.make_sample_data
-      display_name: COOL lab IO tools
-      key: unique_id.1
   widgets:
     - command: napari-cool-tools-io.load_prof
       display_name: Load .prof w/o metadata
       autogenerate: false
-    - command: napari-cool-tools-io.make_qwidget
-      display_name: Example QWidget
-    - command: napari-cool-tools-io.make_magic_widget
-      display_name: Example Magic Widget
-    - command: napari-cool-tools-io.make_func_widget
-      autogenerate: true
-      display_name: Example Function Widget
