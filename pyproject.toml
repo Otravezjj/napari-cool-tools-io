@@ -1,8 +1,10 @@
 [build-system]
+
+# delete setuptools_scm if git is not installed inorder to install
 requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
-
+# delelte setuptools_scm if git is not installed inorder to install
 [tool.setuptools_scm]
 write_to = "src/napari_cool_tools_io/_version.py"
 
