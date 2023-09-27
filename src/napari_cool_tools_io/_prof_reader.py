@@ -84,12 +84,49 @@ def prof_proc_meta(path):
 
     # constuct path to metafile assumed to be in same directory
     meta_path = ospath.join(head, file_base + ".xml")
-    show_info(f"Associated meta data file: {meta_path}")
+    show_info(f"Associated .xml meta data file: {meta_path}")
+    meta_path2 = ospath.join(head, file_base + ".ini")
+    show_info(f"Associated .ini meta data file: {meta_path2}")
 
     # verify whether meta file exists or not
     # if isinstance(meta_path, str):
+
+    if Path(meta_path2).is_file():
+        show_info(".ini Meta Data exists:")
+        height, width, depth = None, None, None
+
+        with open(meta_path2) as file:
+            for line in file:
+                if "HEIGHT" in line:
+                    words = line.split("=")
+                    index = words.index("HEIGHT")
+                    if index + 1 < len(words):
+                        height = int(words[index + 1])
+                        # print(height)
+                if "BScanWidth" in line:
+                    words = line.split("=")
+                    index = words.index("BScanWidth")
+                    if index + 1 < len(words):
+                        width = int(words[index + 1])
+                        # print(width)
+                if "FRAMES" in line:
+                    words = line.split("=")
+                    index = words.index("FRAMES")
+                    if index + 1 < len(words):
+                        depth = int(words[index + 1])
+                        # print(depth)
+
+        dtype = None
+        layer_type = None
+
+        # Case no valid values obtained from metafile return None
+        if depth is not None and height is not None and width is not None:
+            return (height, width, depth, dtype, layer_type)
+        else:
+            return None
+
     if Path(meta_path).is_file():
-        show_info("Meta Data exists:")
+        show_info(".xml Meta Data exists:")
 
         tree = ET.parse(meta_path)
         root = tree.getroot()
