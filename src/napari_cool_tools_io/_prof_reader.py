@@ -35,15 +35,16 @@ def prof_get_reader(path):
         # case meta data is valid
         if meta is not None:
             print(
-                f"h,w,d {meta}, size(bytes): {file_size}, data entries: {num_entries}"
+                f"h,w,d,BMscan {meta}, size(bytes): {file_size}, data entries: {num_entries}"
             )
             # calculate width of data volume using height and depth info
             # from meta data file and calculated number of data entries
-            h, w, d, dtype, layer_type = meta
+            h, w, d, bmscan, dtype, layer_type = meta
 
             globals()["prof_width"] = w
             globals()["prof_height"] = h
             globals()["prof_depth"] = d
+            globals()["prof_bmscan"] = bmscan
             globals()["dtype"] = dtype
             globals()["layer_type"] = layer_type
 
@@ -62,8 +63,8 @@ def prof_proc_meta(path):
         path(str or list of str): Path to file, or list of paths.
 
     Returns:
-        If .ini metafile is valid returns tuple(height(int),width(int),depth(int))
-        else if .xml metafile is valid returns tuple(height(int),width(int),depth(int))
+        If .ini metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int))
+        else if .xml metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int))
         else returns None
 
         If both .ini and .xml metafiles exist the .ini file will be used and the .xml will be ingnored
@@ -97,7 +98,7 @@ def prof_proc_meta(path):
 
     if Path(meta_path2).is_file():
         show_info(".ini Meta Data exists:")
-        height, width, depth = None, None, None
+        height, width, depth, bmscan = None, None, None, None
 
         with open(meta_path2) as file:
             for line in file:
@@ -119,13 +120,24 @@ def prof_proc_meta(path):
                     if index + 1 < len(words):
                         depth = int(words[index + 1])
                         # print(depth)
+                if "BMScan" in line:
+                    words = line.split("=")
+                    index = words.index("BMScan")
+                    if index + 1 < len(words):
+                        bmscan = int(words[index + 1])
+                        print(bmscan)
 
         dtype = None
         layer_type = None
 
         # Case no valid values obtained from metafile return None
-        if depth is not None and height is not None and width is not None:
-            return (height, width, depth, dtype, layer_type)
+        if (
+            depth is not None
+            and height is not None
+            and width is not None
+            and bmscan is not None
+        ):
+            return (height, width, depth, bmscan, dtype, layer_type)
         else:
             return None
 
@@ -140,6 +152,10 @@ def prof_proc_meta(path):
         width = int(volume_size_attrib["BscanWidth"])
         depth = int(volume_size_attrib["Number_of_Frames"])
 
+        scanning_params = root.find(".//Scanning_Parameters")
+        scanning_params_attrib = scanning_params.attrib
+        bmscan = int(scanning_params_attrib["Number_of_BM_Scans"])
+
         layer_info = root.find(".//Layer_Info")
 
         if layer_info is not None:
@@ -151,8 +167,13 @@ def prof_proc_meta(path):
             layer_type = None
 
         # Case no valid values obtained from metafile return None
-        if depth is not None and height is not None and width is not None:
-            return (height, width, depth, dtype, layer_type)
+        if (
+            depth is not None
+            and height is not None
+            and width is not None
+            and bmscan is not None
+        ):
+            return (height, width, depth, bmscan, dtype, layer_type)
         else:
             return None
 
@@ -179,6 +200,7 @@ def prof_file_reader(path):
 
     h = globals()["prof_height"]
     w = globals()["prof_width"]
+    bmscan = globals()["prof_bmscan"]
     dtype = globals()["dtype"]
     layer_type = globals()["layer_type"]
 
@@ -205,6 +227,21 @@ def prof_file_reader(path):
     display = np.flip(b_scan.transpose(0, 2, 1), 1)
     # display = b_scan
 
+    # Determine if volume is octa
+    if bmscan > 1:
+        show_info("This is an OCTA Volume!!")
+        sign = 1
+        fix_octa = np.empty_like(display)
+        for i in range(len(fix_octa)):
+            if sign == -1:
+                fix_octa[i] = np.flip(display[i], axis=1)
+            else:
+                fix_octa[i] = display[i]
+            if (i + 1) % bmscan == 0:
+                sign = sign * -1
+
+        display = fix_octa
+
     # optional kwargs for viewer.add_* method
     add_kwargs = {"name": file_name}
 
@@ -215,6 +252,6 @@ def prof_file_reader(path):
         pass
 
     show_info(
-        f"layer_name: {file_name}, shape: {display.shape}, dtype: {display.dtype}, layer type: {layer_type}\n"
+        f"layer_name: {file_name}, shape: {display.shape}, bmscan: {bmscan}, dtype: {display.dtype}, layer type: {layer_type}\n"
     )
     return [(display, add_kwargs, layer_type)]
