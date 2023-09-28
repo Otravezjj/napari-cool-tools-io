@@ -62,7 +62,11 @@ def prof_proc_meta(path):
         path(str or list of str): Path to file, or list of paths.
 
     Returns:
-        If xml metafile is valid returns tuple(height(int),width(int),depth(int)) else returns None
+        If .ini metafile is valid returns tuple(height(int),width(int),depth(int))
+        else if .xml metafile is valid returns tuple(height(int),width(int),depth(int))
+        else returns None
+
+        If both .ini and .xml metafiles exist the .ini file will be used and the .xml will be ingnored
     """
 
     height = None
