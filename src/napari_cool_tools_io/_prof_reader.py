@@ -58,7 +58,7 @@ def prof_get_reader(path):
 
 
 def prof_proc_meta(path):
-    """Process .prof file xml metadata.
+    """Process .prof file metadata.
 
     Args:
         path(str or list of str): Path to file, or list of paths.
