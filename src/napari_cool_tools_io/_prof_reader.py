@@ -39,12 +39,13 @@ def prof_get_reader(path):
             )
             # calculate width of data volume using height and depth info
             # from meta data file and calculated number of data entries
-            h, w, d, bmscan, dtype, layer_type = meta
+            h, w, d, bmscan, w_param, dtype, layer_type = meta
 
             globals()["prof_width"] = w
             globals()["prof_height"] = h
             globals()["prof_depth"] = d
             globals()["prof_bmscan"] = bmscan
+            globals()["prof_width_param"] = w_param
             globals()["dtype"] = dtype
             globals()["layer_type"] = layer_type
 
@@ -98,10 +99,21 @@ def prof_proc_meta(path):
 
     if Path(meta_path2).is_file():
         show_info(".ini Meta Data exists:")
-        height, width, depth, bmscan = None, None, None, None
+        width_param, height, width, depth, bmscan = (
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
 
         with open(meta_path2) as file:
             for line in file:
+                if "WIDTH" in line:
+                    words = line.split("=")
+                    index = words.index("WIDTH")
+                    if index + 1 < len(words):
+                        width_param = int(words[index + 1])
                 if "HEIGHT" in line:
                     words = line.split("=")
                     index = words.index("HEIGHT")
@@ -136,8 +148,17 @@ def prof_proc_meta(path):
             and height is not None
             and width is not None
             and bmscan is not None
+            and width_param is not None
         ):
-            return (height, width, depth, bmscan, dtype, layer_type)
+            return (
+                height,
+                width,
+                depth,
+                bmscan,
+                width_param,
+                dtype,
+                layer_type,
+            )
         else:
             return None
 
@@ -148,13 +169,14 @@ def prof_proc_meta(path):
         root = tree.getroot()
         volume_size = root.find(".//Volume_Size")
         volume_size_attrib = volume_size.attrib
+        width_param = int(volume_size_attrib["Width"])
         height = int(volume_size_attrib["Height"])
         width = int(volume_size_attrib["BscanWidth"])
         depth = int(volume_size_attrib["Number_of_Frames"])
 
         scanning_params = root.find(".//Scanning_Parameters")
         scanning_params_attrib = scanning_params.attrib
-        bmscan = int(scanning_params_attrib["Number_of_BM_Scans"])
+        bmscan = int(scanning_params_attrib["Number_of_BM_scans"])
 
         layer_info = root.find(".//Layer_Info")
 
@@ -172,8 +194,17 @@ def prof_proc_meta(path):
             and height is not None
             and width is not None
             and bmscan is not None
+            and width_param is not None
         ):
-            return (height, width, depth, bmscan, dtype, layer_type)
+            return (
+                height,
+                width,
+                depth,
+                bmscan,
+                width_param,
+                dtype,
+                layer_type,
+            )
         else:
             return None
 
