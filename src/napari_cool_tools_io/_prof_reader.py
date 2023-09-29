@@ -30,7 +30,7 @@ def prof_get_reader(path):
         # aka 4 bytes  as there are 8 bits per byte
         num_entries = file_size / data_element_size
 
-        meta = prof_proc_meta(path)
+        meta = prof_proc_meta(path, ".prof")
 
         # case meta data is valid
         if meta is not None:
@@ -57,15 +57,16 @@ def prof_get_reader(path):
     return None
 
 
-def prof_proc_meta(path):
+def prof_proc_meta(path, ext: str):
     """Process .prof file metadata.
 
     Args:
         path(str or list of str): Path to file, or list of paths.
+        ext(str): extension of source file
 
     Returns:
-        If .ini metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int))
-        else if .xml metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int))
+        If .ini metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int),width_param(int),dtype(None/dtype),layer_type(None/layer_type))
+        else if .xml metafile is valid returns tuple(height(int),width(int),depth(int),bmscan(int),width_param(int),dtype(None/dtype),layer_type(None/layer_type))
         else returns None
 
         If both .ini and .xml metafiles exist the .ini file will be used and the .xml will be ingnored
@@ -83,7 +84,7 @@ def prof_proc_meta(path):
     file_name = tail
 
     # remove .prof extenstion
-    file_no_ext = file_name.replace(".prof", "")
+    file_no_ext = file_name.replace(ext, "")
 
     # remove common .prof specifiers _OCTA and _Struc
     file_base = file_no_ext.replace("_OCTA", "").replace("_Struc", "")
