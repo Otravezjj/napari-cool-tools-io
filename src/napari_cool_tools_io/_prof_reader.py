@@ -149,7 +149,7 @@ def prof_proc_meta(path, ext: str):
             and height is not None
             and width is not None
             and bmscan is not None
-            and width_param is not None
+            # and width_param is not None
         ):
             return (
                 height,
@@ -170,14 +170,20 @@ def prof_proc_meta(path, ext: str):
         root = tree.getroot()
         volume_size = root.find(".//Volume_Size")
         volume_size_attrib = volume_size.attrib
-        width_param = int(volume_size_attrib["Width"])
+        if "Width" in volume_size_attrib:
+            width_param = int(volume_size_attrib["Width"])
+        else:
+            width_param = None
         height = int(volume_size_attrib["Height"])
         width = int(volume_size_attrib["BscanWidth"])
         depth = int(volume_size_attrib["Number_of_Frames"])
 
         scanning_params = root.find(".//Scanning_Parameters")
-        scanning_params_attrib = scanning_params.attrib
-        bmscan = int(scanning_params_attrib["Number_of_BM_scans"])
+        if scanning_params is not None:
+            scanning_params_attrib = scanning_params.attrib
+            bmscan = int(scanning_params_attrib["Number_of_BM_scans"])
+        else:
+            bmscan = None
 
         layer_info = root.find(".//Layer_Info")
 
@@ -194,8 +200,8 @@ def prof_proc_meta(path, ext: str):
             depth is not None
             and height is not None
             and width is not None
-            and bmscan is not None
-            and width_param is not None
+            # and bmscan is not None
+            # and width_param is not None
         ):
             return (
                 height,
@@ -260,7 +266,7 @@ def prof_file_reader(path):
     # display = b_scan
 
     # Determine if volume is octa
-    if bmscan > 1:
+    if bmscan is not None and bmscan > 1:
         show_info("This is an OCTA Volume!!")
         sign = 1
         fix_octa = np.empty_like(display)
