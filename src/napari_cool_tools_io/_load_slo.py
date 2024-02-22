@@ -9,7 +9,7 @@ from napari.layers import Layer
 
 
 @magic_factory()
-def load_prof(
+def load_slo(
     path=Path("."), h=1250, w=1250, temp_fix=True, improve_reg=True
 ) -> Layer:  # LayerDataTuple:
     """ """

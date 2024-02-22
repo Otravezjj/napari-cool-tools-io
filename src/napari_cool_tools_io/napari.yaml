@@ -35,9 +35,9 @@ contributions:
     - id: napari-cool-tools-io.make_sample_data
       python_name: napari_cool_tools_io._sample_data:make_sample_data
       title: Load sample data from COOL lab IO tools
-    - id: napari-cool-tools-io.load_prof
-      title: Load ".prof" files without metadata
-      python_name: napari_cool_tools_io._load_prof:load_prof
+    - id: napari-cool-tools-io.load_slo
+      title: Load ".slo" files without metadata
+      python_name: napari_cool_tools_io._load_slo:load_slo
   readers:
     - command: napari-cool-tools-io.prof_get_reader
       accepts_directories: false
@@ -104,6 +104,6 @@ contributions:
       - .prof
       display_name: Napari Data # shown in file save dialog
   widgets:
-    - command: napari-cool-tools-io.load_prof
-      display_name: Load .prof w/o metadata
+    - command: napari-cool-tools-io.load_slo
+      display_name: Load .slo w/o metadata
       autogenerate: false
