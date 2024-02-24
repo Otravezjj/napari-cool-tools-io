@@ -29,22 +29,22 @@ contributions:
     - id: napari-cool-tools-io.write_compressed_data_mat
       title: Save compressed Scene .mat
       python_name: napari_cool_tools_io._mat_writer:compressed_data_mat_file_writer
-    - id: napari-cool-tools-io.make_sample_data
-      python_name: napari_cool_tools_io._sample_data:make_sample_data
-      title: Load sample data from COOL lab IO tools
-    - id: napari-cool-tools-io.make_qwidget
-      python_name: napari_cool_tools_io._widget:ExampleQWidget
-      title: Make example QWidget
-    - id: napari-cool-tools-io.make_magic_widget
-      python_name: napari_cool_tools_io._widget:example_magic_widget
-      title: Make example magic widget
-    - id: napari-cool-tools-io.make_func_widget
-      python_name: napari_cool_tools_io._widget:example_function_widget
-      title: Make example function widget
+    - id: napari-cool-tools-io.write_data_prof
+      title: Save Data .prof
+      python_name: napari_cool_tools_io._prof_writer:prof_file_writer
+    - id: napari-cool-tools-io.write_data_float64
+      title: Save Data float64 data
+      python_name: napari_cool_tools_io._float64_writer:float64_file_writer
+    - id: napari-cool-tools-io.load_slo
+      title: Load ".slo" files without metadata
+      python_name: napari_cool_tools_io._load_slo:load_slo
+    - id: napari-cool-tools-io.capture_view_data
+      title: Capture data from the active viewport
+      python_name: napari_cool_tools_io._screen_capture:data_capture_from_view
+    - id: napari-cool-tools-io.capture_view_image
+      title: Capture image with settings from the active viewport
+      python_name: napari_cool_tools_io._screen_capture:image_capture_from_view
   readers:
-    - command: napari-cool-tools-io.get_reader
-      accepts_directories: false
-      filename_patterns: ['*.npy']
     - command: napari-cool-tools-io.prof_get_reader
       accepts_directories: false
       filename_patterns:
@@ -54,12 +54,6 @@ contributions:
       filename_patterns:
       - '*.mat'
   writers:
-    - command: napari-cool-tools-io.write_multiple
-      layer_types: ['image*','labels*']
-      filename_extensions: []
-    - command: napari-cool-tools-io.write_single_image
-      layer_types: ['image']
-      filename_extensions: ['.npy']
     - command: napari-cool-tools-io.write_scene_mat
       layer_types:
       - image*
@@ -108,15 +102,26 @@ contributions:
       filename_extensions:
       - .mat
       display_name: Napari Data - compressed # shown in file save dialog
-  sample_data:
-    - command: napari-cool-tools-io.make_sample_data
-      display_name: COOL lab IO tools
-      key: unique_id.1
+    - command: napari-cool-tools-io.write_data_prof
+      layer_types:
+      - image*
+      - labels*
+      filename_extensions:
+      - .prof
+      display_name: Napari Data # shown in file save dialog
+    - command: napari-cool-tools-io.write_data_float64
+      layer_types:
+      - image*
+      filename_extensions:
+      - .png
+      display_name: Float64 Conversion # shown in file save dialog
   widgets:
-    - command: napari-cool-tools-io.make_qwidget
-      display_name: Example QWidget
-    - command: napari-cool-tools-io.make_magic_widget
-      display_name: Example Magic Widget
-    - command: napari-cool-tools-io.make_func_widget
-      autogenerate: true
-      display_name: Example Function Widget
+    - command: napari-cool-tools-io.load_slo
+      display_name: Load .slo w/o metadata
+      autogenerate: false
+    - command: napari-cool-tools-io.capture_view_data
+      display_name: Data capture (viewport)
+      autogenerate: false
+    - command: napari-cool-tools-io.capture_view_image
+      display_name: Image capture (viewport)
+      autogenerate: false

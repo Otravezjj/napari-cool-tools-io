@@ -56,14 +56,14 @@ def compressed_mat_file_writer(
         List[path]: List of paths to .MAT files
     """
 
-    print(f"\nwriting to file: {path}\n\nFullLayerData: {layer_data}\n")
+    show_info(f"\nwriting to file: {path}\n\nFullLayerData: {layer_data}\n")
 
     mat_dict = {"napari": [layer_data]}
     # savemat(path, mat_dict, do_compression=True)
     worker = save_numpy(path, mat_dict, True)
     worker.start()
 
-    print(f"\n.MAT file dictionary: {mat_dict}\n\n")
+    show_info(f"\n.MAT file dictionary: {mat_dict}\n\n")
 
     return [path]
 
@@ -85,7 +85,7 @@ def data_mat_file_writer(path: str, layers: list[Layer]) -> List[str]:
         name = layer[1]["name"]
         layer_type = layer[2]
 
-        print(
+        show_info(
             f"\nwriting to file: {path}\n\n{name} is a {layer_type} layer containing data:\n{data}\n"
         )
 
@@ -98,7 +98,7 @@ def data_mat_file_writer(path: str, layers: list[Layer]) -> List[str]:
         worker = save_numpy(path, mat_dict, False)
         worker.start()
 
-        print(f"\n.MAT file dictionary: {mat_dict}\n\n")
+        show_info(f"\n.MAT file dictionary: {mat_dict}\n\n")
 
     else:
         path = Path(path)
@@ -113,7 +113,7 @@ def data_mat_file_writer(path: str, layers: list[Layer]) -> List[str]:
             layer_type = layer[2]
             out_path = p_dir / f"{name}{ext}"
 
-            print(
+            show_info(
                 f"\nwriting to file: {out_path}\n\n{name} is a {layer_type} layer containing data:\n{data}\n"
             )
 
@@ -126,7 +126,7 @@ def data_mat_file_writer(path: str, layers: list[Layer]) -> List[str]:
             worker = save_numpy(out_path, mat_dict, False)
             worker.start()
 
-            print(f"\n.MAT file dictionary: {mat_dict}\n\n")
+            show_info(f"\n.MAT file dictionary: {mat_dict}\n\n")
 
     return [path]
 
@@ -150,7 +150,7 @@ def compressed_data_mat_file_writer(
         name = layer[1]["name"]
         layer_type = layer[2]
 
-        print(
+        show_info(
             f"\nwriting to file: {path}\n\n{name} is a {layer_type} layer containing data:\n{data}\n"
         )
 
@@ -163,7 +163,7 @@ def compressed_data_mat_file_writer(
         worker = save_numpy(path, mat_dict, True)
         worker.start()
 
-        print(f"\n.MAT file dictionary: {mat_dict}\n\n")
+        show_info(f"\n.MAT file dictionary: {mat_dict}\n\n")
 
     else:
         path = Path(path)
@@ -179,7 +179,7 @@ def compressed_data_mat_file_writer(
             layer_type = layer[2]
             out_path = p_dir / f"{name}{ext}"
 
-            print(
+            show_info(
                 f"\nwriting to file: {out_path}\n\n{name} is a {layer_type} layer containing data:\n{data}\n"
             )
 
@@ -192,6 +192,6 @@ def compressed_data_mat_file_writer(
             worker = save_numpy(out_path, mat_dict, True)
             worker.start()
 
-            print(f"\n.MAT file dictionary: {mat_dict}\n\n")
+            show_info(f"\n.MAT file dictionary: {mat_dict}\n\n")
 
     return [path]
