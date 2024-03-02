@@ -10,12 +10,19 @@ from napari.layers import Layer
 
 @magic_factory()
 def load_slo(
-    path=Path("."), h=1250, w=1250, temp_fix=True, improve_reg=True
+    path=Path("."),
+    h=1250,
+    w=1250,
+    temp_fix=True,
+    improve_reg=True,
+    subpixel=True,
 ) -> Layer:  # LayerDataTuple:
     """ """
     import os.path as ospath
 
-    ## define chuncks as little endian f32 4 byte floats with HEIGHT values
+    from scipy.ndimage import fourier_shift
+
+    ## define chunks as little endian f32 4 byte floats with HEIGHT values
     ## per row and WIDTH values per column
     # dot_prof = np.dtype(('<f4', (HEIGHT, WIDTH)))
 
@@ -39,7 +46,7 @@ def load_slo(
     file_name = tail.replace(".", "_")
     print(f"layer_name: {file_name}\n")
 
-    # define chuncks as little endian f32 4 byte floats with HEIGHT values
+    # define chunks as little endian f32 4 byte floats with HEIGHT values
     # per row and WIDTH values per column
     mip_z = np.dtype(("<f8", (h, w)))  # saved as double precision f64 8 byte
     # mip_z = np.dtype(('<f4', (h, w)))
@@ -89,13 +96,25 @@ def load_slo(
             even, odd, upsample_factor=100
         )
 
-        shift_h = round(shift[2])
-        shift_idx = abs(shift_h)
+        if subpixel:
+            input_ = np.fft.fft2(odd)
+            result = fourier_shift(input_, (0.0, 0.0, shift[2]), axis=2)
+            result = np.fft.ifft2(result)
+            odd_shift = result.real
 
-        print(f"shift: {shift}\nshift_h: {shift_h}")
+            print(f"shift: {shift}\n")
 
-        odd_shift = np.roll(odd, shift_h, axis=2)
-        odd_shift[:, :, -shift_idx:] = 0
+        else:
+            shift_h = round(shift[2])
+            shift_idx = abs(shift_h)
+
+            print(f"shift: {shift}\nshift_h: {shift_h}")
+
+            if shift_h > 0:
+                odd_shift = np.roll(odd, shift_h, axis=2)
+                odd_shift[:, :, -shift_idx:] = 0
+            else:
+                odd_shift = odd
 
         registered = np.empty_like(display)
         registered[:, ::2, :] = even
