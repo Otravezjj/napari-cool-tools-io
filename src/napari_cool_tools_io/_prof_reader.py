@@ -273,6 +273,7 @@ def prof_file_reader(path):
         for i in range(len(fix_octa)):
             if sign == -1:
                 fix_octa[i] = np.flip(display[i], axis=1)
+                #fix_octa[i] = display[i]
             else:
                 fix_octa[i] = display[i]
             if (i + 1) % bmscan == 0:
