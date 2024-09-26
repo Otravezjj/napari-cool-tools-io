@@ -66,6 +66,6 @@ def torch_file_reader(path):
         pass
 
     show_info(
-        f"layer_name: {file_name}, shape: {display.shape}, data: {data}, dtype: {display.dtype}, layer type: {layer_type}\n"
+        f"layer_name: {file_name}, shape: {display.shape}, dtype: {display.dtype}, layer type: {layer_type}\n" #data: {data},
     )
     return [(display, attributes, layer_type)]
