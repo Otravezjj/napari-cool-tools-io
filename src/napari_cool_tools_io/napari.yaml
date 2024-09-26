@@ -50,7 +50,7 @@ contributions:
     - id: napari-cool-tools-io.capture_view_image
       title: Capture image with settings from the active viewport
       python_name: napari_cool_tools_io._screen_capture:image_capture_from_view
-    - id: napari-cool-tools-io.export_labels_tiff
+    - id: napari-cool-tools-io.convert_labels_tiff
       title: Convert labels to tiff(grayscale)
       python_name: napari_cool_tools_io._import_export_labels:convert_labels_tiff
     - id: napari-cool-tools-io.convert_tiff_labels
