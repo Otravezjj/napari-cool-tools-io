@@ -8,6 +8,16 @@ from napari.utils.notifications import show_info
 
 data_element_size = 4  # number of bytes per data element f32 == 4 bytes
 
+def ini_proc_word(line,target_str):
+    """"""
+    words = line.split("=")
+    index = words.index(target_str)
+    if index + 1 < len(words):
+        val = int(words[index + 1])
+        return val
+    else:
+        print("ERROR in ini_proc_word function")
+        return None
 
 def prof_get_reader(path):
     """Reader for COOL lab .prof file format.
@@ -108,37 +118,31 @@ def prof_proc_meta(path, ext: str):
             None,
         )
 
+        data = {"section":"", "content":""}
+        settings = []
+
         with open(meta_path2) as file:
-            for line in file:
-                if "WIDTH" in line:
-                    words = line.split("=")
-                    index = words.index("WIDTH")
-                    if index + 1 < len(words):
-                        width_param = int(words[index + 1])
-                if "HEIGHT" in line:
-                    words = line.split("=")
-                    index = words.index("HEIGHT")
-                    if index + 1 < len(words):
-                        height = int(words[index + 1])
-                        # print(height)
-                if "BScanWidth" in line:
-                    words = line.split("=")
-                    index = words.index("BScanWidth")
-                    if index + 1 < len(words):
-                        width = int(words[index + 1])
-                        # print(width)
-                if "FRAMES" in line:
-                    words = line.split("=")
-                    index = words.index("FRAMES")
-                    if index + 1 < len(words):
-                        depth = int(words[index + 1])
-                        # print(depth)
-                if "BMScan" in line:
-                    words = line.split("=")
-                    index = words.index("BMScan")
-                    if index + 1 < len(words):
-                        bmscan = int(words[index + 1])
-                        print(bmscan)
+            for i,line in enumerate(file):
+                if "[" not in line:
+                    data["content"] = f"{data['content']}{line}"
+
+                    if data["section"] == "General" and "WIDTH=" in line:
+                        width_param = ini_proc_word(line,"WIDTH")
+                    if data["section"] == "General" and "HEIGHT=" in line:
+                        height = ini_proc_word(line,"HEIGHT")
+                    if data["section"] == "General" and "FRAMES=" in line:
+                        depth = ini_proc_word(line,"FRAMES")
+                    if data["section"] == "OCT" and "BScanWidth=" in line:
+                        width = ini_proc_word(line,"BScanWidth")
+                    if data["section"] == "OCTA" and "BMScan=" in line:
+                        bmscan = ini_proc_word(line,"BMScan")
+                else:
+                    if i != 0:
+                        settings.append(data)
+                    data = {"section":"", "content":""}
+                    data["section"] = line.replace("[","").replace("]","").replace("\n","")
+                    settings
+            settings.append(data)        
 
         dtype = None
         layer_type = None
@@ -291,6 +295,6 @@ def prof_file_reader(path):
         pass
 
     show_info(
-        f"layer_name: {file_name}, shape: {display.shape}, bmscan: {bmscan}, dtype: {display.dtype}, layer type: {layer_type}\n"
+        f"layer_name: {file_name}, shape: {display.shape}, dtype: {display.dtype}, layer type: {layer_type}\n" #bmscan: {bmscan},
     )
     return [(display, add_kwargs, layer_type)]
