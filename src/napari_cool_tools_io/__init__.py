@@ -16,6 +16,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 def memory_stats():
     show_info(f"Gpu memory allocated: {torch.cuda.memory_allocated()/1024**2}")
     show_info(f"Gpu memory reserved: {torch.cuda.memory_reserved()/1024**2}")
+    
+    gpu_mem_clear = (torch.cuda.memory_allocated() == torch.cuda.memory_reserved() == 0)
+
+    print(f"GPU memory is clear: {gpu_mem_clear}\n")
+    if not gpu_mem_clear:
+        print(f"{torch.cuda.memory_summary()}\n")
 
 
 @napari.Viewer.bind_key("i")
