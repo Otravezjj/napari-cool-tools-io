@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import List
 from enum import Enum
+from pickle import HIGHEST_PROTOCOL
 
 from napari.qt import thread_worker
 from napari.layers import Image, Labels, Layer
@@ -28,7 +29,7 @@ def ndarray_to_file_thread(path, data, attributes, layer_type):
     print(f"data min/max: {data.min()}/{data.max()}\ndtype: {data.dtype}\n")
     out_data = torch.from_numpy(data.copy())
     out_layer_data_tuple = (out_data,attributes,layer_type)
-    torch.save(out_layer_data_tuple,path)
+    torch.save(out_layer_data_tuple,path,pickle_protocol=HIGHEST_PROTOCOL)
     #data.tofile(path)
     #np.save(path,data)
     show_info(".prof save thread has completed.")
@@ -92,6 +93,14 @@ def torch_file_writer(path: str, layer_data: list[FullLayerData]) -> List[str]:
                 return None
     return [path]
 
+@thread_worker(progress=True)
+def torch_save_thread(data:any, path:Path):
+    """"""
+    show_info(f"torch save thread started!!\n")
+    torch_data = torch.save(data,path,pickle_protocol=HIGHEST_PROTOCOL)
+    show_info(f"torch save thread completed!!\n")
+    return torch_data
+
 
 class OutputType(Enum):
     """Enum for various output types."""
@@ -102,16 +111,6 @@ class OutputType(Enum):
 def _on_init(widget):
     """"""
     widget.out_type.changed.connect(lambda val: torch_file_exporter_change(widget,val))
-
-
-@thread_worker(progress=True)
-def torch_save_thread(data:any, path:Path):
-    """"""
-    show_info(f"torch save thread started!!\n")
-    torch_data = torch.save(data,path)
-    show_info(f"torch save thread completed!!\n")
-    return torch_data
-
 
 def torch_file_exporter_change(widget,val):
     """"""
